@@ -1,32 +1,19 @@
 import { useState } from "react";
 
-export default function KanbanBoard() {
-  const [colums, setColums] = useState([]);
+function KanbanBoard() {
+  const [columns, setColumns] = useState([]);
 
   return (
-    <div className="min-h-[calc(100vh-50px)] overflow-x-auto p-[20px]">
+    <div className="m-auto flex min-h-screen w-full items-center overflow-x-auto overflow-y-hidden px-[40px]">
       <button
         onClick={() => {
-          createNewColumn();
+          // createNewColumn();
         }}
-        className="
-      h-[60px]
-      w-[350px]
-      min-w-[350px]
-      cursor-pointer
-      rounded-lg
-      bg-secondary
-      border-2
-      border-columnBackgroundColor
-      p-4
-      ring-rose-500
-      hover:ring-2
-      flex
-      gap-2
-      ">
+        className=" h-[60px]w-[350px] min-w-[350px] cursor-pointer rounded-lg bg-secondary border-2 
+        border-columnBackgroundColor p-4 hover:ring-2 flex gap-2">
         Add Column
       </button>
     </div>
   );
-  function createNewColumn() {}
 }
+export default KanbanBoard;
