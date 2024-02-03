@@ -1,8 +1,16 @@
 import { useMemo, useState } from "react";
 import { Column, Id } from "../types";
 
-import { DndContext, DragOverlay, DragStartEvent } from "@dnd-kit/core";
-import { SortableContext } from "@dnd-kit/sortable";
+import {
+  DndContext,
+  DragEndEvent,
+  DragOverlay,
+  DragStartEvent,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import { createPortal } from "react-dom";
 
 import ColumnContainer from "./ColumnContainer";
@@ -13,11 +21,22 @@ function KanbanBoard() {
 
   const columnId = useMemo(() => columns.map((col) => col.id), [columns]);
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 10,
+      },
+    })
+  );
+
   return (
     <div
       className="m-auto flex gap-4 min-h-[calc(100vh-50px)] w-full items-center  overflow-x-auto 
     overflow-y-hidden px-[40px]">
-      <DndContext onDragStart={onDragStart}>
+      <DndContext
+        sensors={sensors}
+        onDragStart={onDragStart}
+        onDragEnd={onDragEnd}>
         <div className="flex gap-4">
           <SortableContext items={columnId}>
             {columns?.map((col) => {
@@ -78,6 +97,28 @@ function KanbanBoard() {
       setActiveColumn(e.active.data.current.column);
       return;
     }
+  }
+
+  function onDragEnd(e: DragEndEvent) {
+    const { active, over } = e;
+    if (!over) return;
+
+    const activeColumnId = active.id;
+    const overColumnId = over.id;
+
+    if (activeColumnId === overColumnId) return;
+
+    setColumns((columns) => {
+      const activeColumnIndex = columns.findIndex(
+        (col) => col.id === activeColumnId
+      );
+
+      const overColumnIndex = columns.findIndex(
+        (col) => col.id === overColumnId
+      );
+
+      return arrayMove(columns, activeColumnIndex, overColumnIndex);
+    });
   }
 }
 export default KanbanBoard;
