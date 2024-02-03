@@ -1,4 +1,6 @@
+import { useSortable } from "@dnd-kit/sortable";
 import { Column, Id } from "../types";
+import { CSS } from "@dnd-kit/utilities";
 
 interface Props {
   column: Column;
@@ -8,10 +10,36 @@ interface Props {
 export default function ColumnContainer(props: Props) {
   const { column, deleteColumn } = props;
 
+  const {
+    setNodeRef,
+    attributes,
+    listeners,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: column.id,
+    data: { type: "Column", column },
+  });
+
+  const style = { transition, transform: CSS.Transform.toString(transform) };
+
+  if (isDragging)
+    return (
+      <div
+        ref={setNodeRef}
+        style={style}
+        className="bg-red-400 bg-opacity-[0.1] w-[350px] h-[500px] max-h-[500px] rounded-md flex flex-col"></div>
+    );
   return (
-    <div className="bg-red-400 bg-opacity-[0.2] w-[350px] h-[500px] max-h-[500px] rounded-md flex flex-col">
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="bg-red-400 bg-opacity-[0.2] w-[350px] h-[500px] max-h-[500px] rounded-md flex flex-col">
       {/* Column title */}
       <div
+        {...attributes}
+        {...listeners}
         className="text-md h-[60px] cursor-grab rounded-md rounded-b-none p-3 font-bold
       bg-secondary flex items-center justify-between">
         <div className="flex gap-2">
@@ -45,9 +73,21 @@ export default function ColumnContainer(props: Props) {
       {/* Column footer */}
       <button
         className="flex gap-2 items-center border-columnBackgroundColor border-2 rounded-md p-4
-        border-x-columnBackgroundColor hover:bg-mainBackgroundColor hover:text-rose-500 active:bg-black"
+        border-x-columnBackgroundColor hover:bg-mainBackgroundColor hover:text-rose-500  justify-center active:bg-black"
         onClick={() => {}}>
-        Add task
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="w-6 h-6">
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M12 4.5v15m7.5-7.5h-15"
+          />
+        </svg>
       </button>
     </div>
   );
