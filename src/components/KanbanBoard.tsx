@@ -45,6 +45,7 @@ function KanbanBoard() {
                   column={col}
                   key={col.id}
                   deleteColumn={deleteColumn}
+                  updateColumn={updateColumn}
                 />
               );
             })}
@@ -65,6 +66,7 @@ function KanbanBoard() {
               <ColumnContainer
                 column={activeColumn}
                 deleteColumn={deleteColumn}
+                updateColumn={updateColumn}
               />
             )}
           </DragOverlay>,
@@ -86,6 +88,16 @@ function KanbanBoard() {
   function deleteColumn(id: Id) {
     const filteredColumns = columns.filter((col) => col.id !== id);
     setColumns(filteredColumns);
+  }
+
+  function updateColumn(id: Id, title: string) {
+    const newColumns = columns.map((col) => {
+      if (col.id !== id) return col;
+
+      return { ...col, title };
+    });
+
+    setColumns(newColumns);
   }
 
   function generateId() {
