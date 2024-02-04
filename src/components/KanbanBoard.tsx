@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Column, Id } from "../types";
+import { Column, Id, Task } from "../types";
 
 import {
   DndContext,
@@ -18,6 +18,7 @@ import ColumnContainer from "./ColumnContainer";
 function KanbanBoard() {
   const [columns, setColumns] = useState<Column[]>([]);
   const [activeColumn, setActiveColumn] = useState<Column | null>(null);
+  const [tasks, setTasks] = useState<Task[]>([]);
 
   const columnId = useMemo(() => columns.map((col) => col.id), [columns]);
 
@@ -46,6 +47,8 @@ function KanbanBoard() {
                   key={col.id}
                   deleteColumn={deleteColumn}
                   updateColumn={updateColumn}
+                  createTask={createTask}
+                  tasks={tasks.filter((task) => task.columnId === col.id)}
                 />
               );
             })}
@@ -67,6 +70,10 @@ function KanbanBoard() {
                 column={activeColumn}
                 deleteColumn={deleteColumn}
                 updateColumn={updateColumn}
+                createTask={createTask}
+                tasks={tasks.filter(
+                  (task) => task.columnId === activeColumn.id
+                )}
               />
             )}
           </DragOverlay>,
@@ -102,6 +109,16 @@ function KanbanBoard() {
 
   function generateId() {
     return Math.floor(Math.random() * 10000);
+  }
+
+  function createTask(columnId: Id) {
+    const newTask: Task = {
+      id: generateId(),
+      columnId,
+      content: `Task ${tasks.length + 1}`,
+    };
+
+    setTasks([...tasks, newTask]);
   }
 
   function onDragStart(e: DragStartEvent) {

@@ -1,7 +1,7 @@
 import Header from "./components/header/Header";
 import KanbanBoard from "./components/KanbanBoard";
 
-export default function App() {
+function App() {
   return (
     <div className="bg-primary text-textColor">
       <Header />
@@ -9,3 +9,4 @@ export default function App() {
     </div>
   );
 }
+export default App;

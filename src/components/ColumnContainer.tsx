@@ -1,5 +1,5 @@
 import { useSortable } from "@dnd-kit/sortable";
-import { Column, Id } from "../types";
+import { Column, Id, Task } from "../types";
 import { CSS } from "@dnd-kit/utilities";
 import { useState } from "react";
 
@@ -7,10 +7,12 @@ interface Props {
   column: Column;
   deleteColumn: (id: Id) => void;
   updateColumn: (id: Id, title: string) => void;
+  createTask: (columnId: Id) => void;
+  tasks: Task[];
 }
 
 export default function ColumnContainer(props: Props) {
-  const { column, deleteColumn, updateColumn } = props;
+  const { column, deleteColumn, updateColumn, createTask, tasks } = props;
   const [editMode, setEditMode] = useState(false);
 
   const {
@@ -35,6 +37,7 @@ export default function ColumnContainer(props: Props) {
         style={style}
         className="bg-red-400 bg-opacity-[0.1] w-[350px] h-[500px] max-h-[500px] rounded-md flex flex-col"></div>
     );
+
   return (
     <div
       ref={setNodeRef}
@@ -86,12 +89,16 @@ export default function ColumnContainer(props: Props) {
       </div>
 
       {/* Column task container */}
-      <div className="flex flex-grow flex-col gap-4 p-2 overflow-x-hidden overflow-y-auto"></div>
+      <div className="flex flex-grow flex-col gap-4 p-2 overflow-x-hidden overflow-y-auto">
+        {tasks.map((task) => {
+          return <div key={task.id}>{task.content}</div>;
+        })}
+      </div>
       {/* Column footer */}
       <button
-        className="flex gap-2 items-center border-columnBackgroundColor border-2 rounded-md p-4
-        border-x-columnBackgroundColor hover:bg-mainBackgroundColor hover:text-rose-500  justify-center active:bg-black"
-        onClick={() => {}}>
+        className="flex items-center border-2 p-4 hover:bg-gray-500 hover:text-rose-500 justify-center
+        active:bg-black"
+        onClick={() => createTask(column.id)}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
