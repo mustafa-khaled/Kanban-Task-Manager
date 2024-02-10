@@ -4,18 +4,49 @@ import { Id, Task } from "../types";
 interface Props {
   task: Task;
   deleteTask: (id: Id) => void;
+  updateTask: (id: Id, content: string) => void;
 }
 
-export default function TaskCard({ task, deleteTask }: Props) {
+export default function TaskCard({ task, deleteTask, updateTask }: Props) {
   const [mouseIsOver, setMouseIsOver] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+
+  const toggleEditMode = function () {
+    setEditMode((prev) => !prev);
+    setMouseIsOver(false);
+  };
+
+  if (editMode) {
+    return (
+      <div
+        className="bg-primary p-2.5 h-[100px] min-h-[100px] items-center text-left
+     rounded-xl hover:ring-2 hover:ring-inset hover:ring-rose-500 cursor-grab relative transition-all">
+        <textarea
+          className="h-[90%] w-full resize-none border-none rounded bg-transparent focus:outline-none"
+          value={task.content}
+          autoFocus
+          placeholder="Task content here"
+          onBlur={toggleEditMode}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && e.shiftKey) toggleEditMode();
+          }}
+          onChange={(e) => updateTask(task.id, e.target.value)}>
+          {task.content}
+        </textarea>
+      </div>
+    );
+  }
 
   return (
     <div
+      onClick={toggleEditMode}
       className="bg-primary p-2.5 h-[100px] min-h-[100px] items-center text-left
-     rounded-xl hover:ring-2 hover:ring-inset hover:ring-rose-500 cursor-grab relative transition-all"
+     rounded-xl hover:ring-2 hover:ring-inset hover:ring-rose-500 cursor-grab relative transition-all task"
       onMouseEnter={() => setMouseIsOver(true)}
       onMouseLeave={() => setMouseIsOver(false)}>
-      {task.content}
+      <p className="my-auto h-[90%] w-full overflow-y-auto overflow-x-hidden whitespace-pre-wrap">
+        {task.content}
+      </p>
 
       {mouseIsOver && (
         <button
