@@ -14,11 +14,13 @@ import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import { createPortal } from "react-dom";
 
 import ColumnContainer from "./ColumnContainer";
+import TaskCard from "./TaskCard";
 
 function KanbanBoard() {
   const [columns, setColumns] = useState<Column[]>([]);
   const [activeColumn, setActiveColumn] = useState<Column | null>(null);
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [activeTask, setActiveTask] = useState<Task | null>(null);
 
   const columnId = useMemo(() => columns.map((col) => col.id), [columns]);
 
@@ -37,7 +39,8 @@ function KanbanBoard() {
       <DndContext
         sensors={sensors}
         onDragStart={onDragStart}
-        onDragEnd={onDragEnd}>
+        onDragEnd={onDragEnd}
+        onDragOver={onDragOver}>
         <div className="flex gap-4">
           <SortableContext items={columnId}>
             {columns?.map((col) => {
@@ -78,6 +81,14 @@ function KanbanBoard() {
                 tasks={tasks.filter(
                   (task) => task.columnId === activeColumn.id
                 )}
+              />
+            )}
+
+            {activeTask && (
+              <TaskCard
+                task={activeTask}
+                deleteTask={deleteTask}
+                updateTask={updateTask}
               />
             )}
           </DragOverlay>,
@@ -144,6 +155,11 @@ function KanbanBoard() {
       setActiveColumn(e.active.data.current.column);
       return;
     }
+
+    if (e.active.data.current?.type === "Task") {
+      setActiveTask(e.active.data.current.task);
+      return;
+    }
   }
 
   function onDragEnd(e: DragEndEvent) {
@@ -166,6 +182,28 @@ function KanbanBoard() {
 
       return arrayMove(columns, activeColumnIndex, overColumnIndex);
     });
+  }
+
+  function onDragOver(e: DragEndEvent) {
+    const { active, over } = e;
+    if (!over) return;
+
+    const activeColumnId = active.id;
+    const overColumnId = over.id;
+
+    if (activeColumnId === overColumnId) return;
+
+    const isActiveATask = active.data.current?.type === "Task";
+    const isOverATask = over.data.current?.type === "Task";
+
+    if (!isActiveATask) return;
+
+    // Im dropping a Task over another Task
+    if (isActiveATask && isOverATask) {
+      setTasks([]);
+    }
+
+    // Im dropping a Task over a column
   }
 }
 export default KanbanBoard;

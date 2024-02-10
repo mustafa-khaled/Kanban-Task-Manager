@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Id, Task } from "../types";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 interface Props {
   task: Task;
@@ -16,9 +18,39 @@ export default function TaskCard({ task, deleteTask, updateTask }: Props) {
     setMouseIsOver(false);
   };
 
+  const {
+    setNodeRef,
+    attributes,
+    listeners,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: task.id,
+    data: { type: "Task", task },
+    disabled: editMode,
+  });
+
+  const style = { transition, transform: CSS.Transform.toString(transform) };
+
+  if (isDragging) {
+    return (
+      <div
+        ref={setNodeRef}
+        style={style}
+        className="opacity-30 bg-mainBackgroundColor p-2.5 h-[100px] min-h-[100px] items-center flex text-left 
+        rounded-xl border-2 border-rose-500  cursor-grab relative"
+      />
+    );
+  }
+
   if (editMode) {
     return (
       <div
+        ref={setNodeRef}
+        style={style}
+        {...attributes}
+        {...listeners}
         className="bg-primary p-2.5 h-[100px] min-h-[100px] items-center text-left
      rounded-xl hover:ring-2 hover:ring-inset hover:ring-rose-500 cursor-grab relative transition-all">
         <textarea
@@ -39,6 +71,10 @@ export default function TaskCard({ task, deleteTask, updateTask }: Props) {
 
   return (
     <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
       onClick={toggleEditMode}
       className="bg-primary p-2.5 h-[100px] min-h-[100px] items-center text-left
      rounded-xl hover:ring-2 hover:ring-inset hover:ring-rose-500 cursor-grab relative transition-all task"
