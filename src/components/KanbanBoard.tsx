@@ -32,7 +32,7 @@ function KanbanBoard() {
 
   return (
     <div
-      className="m-auto flex gap-4 min-h-[calc(100vh-50px)] w-full items-center  overflow-x-auto 
+      className="m-auto flex gap-4 min-h-[calc(100vh-50px)] w-full items-start pt-[40px] overflow-x-auto 
     overflow-y-hidden px-[40px]">
       <DndContext
         sensors={sensors}
@@ -48,6 +48,7 @@ function KanbanBoard() {
                   deleteColumn={deleteColumn}
                   updateColumn={updateColumn}
                   createTask={createTask}
+                  deleteTask={deleteTask}
                   tasks={tasks.filter((task) => task.columnId === col.id)}
                 />
               );
@@ -71,6 +72,7 @@ function KanbanBoard() {
                 deleteColumn={deleteColumn}
                 updateColumn={updateColumn}
                 createTask={createTask}
+                deleteTask={deleteTask}
                 tasks={tasks.filter(
                   (task) => task.columnId === activeColumn.id
                 )}
@@ -119,6 +121,11 @@ function KanbanBoard() {
     };
 
     setTasks([...tasks, newTask]);
+  }
+
+  function deleteTask(id: Id) {
+    const newTasks = tasks.filter((task) => task.id !== id);
+    setTasks(newTasks);
   }
 
   function onDragStart(e: DragStartEvent) {

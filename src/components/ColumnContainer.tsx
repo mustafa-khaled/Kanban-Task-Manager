@@ -2,17 +2,20 @@ import { useSortable } from "@dnd-kit/sortable";
 import { Column, Id, Task } from "../types";
 import { CSS } from "@dnd-kit/utilities";
 import { useState } from "react";
+import TaskCard from "./TaskCard";
 
 interface Props {
   column: Column;
   deleteColumn: (id: Id) => void;
   updateColumn: (id: Id, title: string) => void;
   createTask: (columnId: Id) => void;
+  deleteTask: (id: Id) => void;
   tasks: Task[];
 }
 
 export default function ColumnContainer(props: Props) {
-  const { column, deleteColumn, updateColumn, createTask, tasks } = props;
+  const { column, deleteColumn, updateColumn, createTask, tasks, deleteTask } =
+    props;
   const [editMode, setEditMode] = useState(false);
 
   const {
@@ -91,7 +94,7 @@ export default function ColumnContainer(props: Props) {
       {/* Column task container */}
       <div className="flex flex-grow flex-col gap-4 p-2 overflow-x-hidden overflow-y-auto">
         {tasks.map((task) => {
-          return <div key={task.id}>{task.content}</div>;
+          return <TaskCard key={task.id} task={task} deleteTask={deleteTask} />;
         })}
       </div>
       {/* Column footer */}
