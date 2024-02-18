@@ -50,21 +50,21 @@ export default function ColumnContainer(props: Props) {
       <div
         ref={setNodeRef}
         style={style}
-        className="bg-red-400 bg-opacity-[0.1] w-[350px] h-[500px] max-h-[500px] rounded-md flex flex-col"></div>
+        className="bg-secondary bg-opacity-[0.1] w-[350px] h-[500px] min-h-[500px] rounded-md flex flex-col"></div>
     );
 
   return (
     <div
       ref={setNodeRef}
       style={style}
-      className="bg-red-400 bg-opacity-[0.2] w-[350px] h-[500px] max-h-[500px] rounded-md flex flex-col">
+      className="bg-opacity-[0.2] w-[350px] h-[500px] max-h-[500px] rounded-md flex flex-col">
       {/* Column title */}
       <div
         {...attributes}
         {...listeners}
         onClick={() => setEditMode(true)}
         className="text-md h-[60px] cursor-grab rounded-md rounded-b-none p-3 font-bold
-      bg-secondary flex items-center justify-between">
+      bg-secondary  flex items-center justify-between">
         <div className="flex gap-2">
           <div className="flex justify-center items-center px-2 py-1 text-sm rounded-full">
             0

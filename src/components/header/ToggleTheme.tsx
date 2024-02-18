@@ -19,8 +19,8 @@ export default function ToggleTheme() {
 
         <div className="shadow-card flex h-[46px] w-[82px] items-center justify-center rounded-md bg-white">
           <span
-            className={`flex h-9 w-9 items-center justify-center rounded ${
-              !isChecked ? "bg-red-400 text-white" : "text-body-color"
+            className={`flex h-9 w-9 items-center justify-center rounded  ${
+              !isChecked ? "bg-colorBrand text-white" : "text-body-color"
             }`}>
             <svg
               width="16"
@@ -44,7 +44,7 @@ export default function ToggleTheme() {
           </span>
           <span
             className={`flex h-9 w-9 items-center justify-center rounded ${
-              isChecked ? "bg-red-400 text-white" : "text-body-color"
+              isChecked ? "bg-colorBrand text-white" : "text-body-color"
             }`}>
             <svg
               width="16"
